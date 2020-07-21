@@ -845,7 +845,7 @@
 
             let result = await response.json();
 
-            result.success ? snackbarSuccess(result.message) : snackbarError(result.errors[0].message);
+            result.success ? snackbarSuccess("We have recieved your proposal, and will get in touch with you shortly...") : snackbarError(result.errors[0].message);
 
         };
 
