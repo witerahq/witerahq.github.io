@@ -838,7 +838,7 @@
                 ProjectSynopsis: new FormData(contact).get('project')
             }
 
-            let response = await fetch('http://cors-anywhere.herokuapp.com/https://4zlqzklts5.execute-api.us-east-1.amazonaws.com/prod/', {
+            let response = await fetch('https://4zlqzklts5.execute-api.us-east-1.amazonaws.com/prod/', {
                 method: 'POST',
                 body: JSON.stringify(value)
             });
