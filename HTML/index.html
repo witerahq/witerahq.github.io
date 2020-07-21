@@ -46,6 +46,99 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="img/witera-logo-black.png" type="image/png">
     <link rel="apple-touch-icon" href="img/witera-logo-black.png">
+    <style>
+        #snackbarSuccess {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: rgb(0, 185, 0);
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+
+        #snackbarError {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: rgb(255, 51, 0);
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+
+        #snackbarSuccess.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        #snackbarError.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @-webkit-keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <!-- End Head -->
 
@@ -616,22 +709,22 @@
             </div>
             <form id="contact" class="center-block g-width-500--sm g-width-550--md">
                 <div class="g-margin-b-30--xs">
-                    <input type="text" class="form-control s-form-v3__input" id="contact-name" name="name"
+                    <input type="text" class="form-control s-form-v3__input" id="contact-name" name="name" required
                         placeholder="* Name">
                 </div>
                 <div class="row g-margin-b-50--xs">
                     <div class="col-sm-6 g-margin-b-30--xs g-margin-b-0--md">
                         <input type="email" class="form-control s-form-v3__input" id="contact-email" name="email"
-                            placeholder="* Email">
+                            required placeholder="* Email">
                     </div>
                     <div class="col-sm-6">
                         <input type="text" class="form-control s-form-v3__input" id="contact-phone" name="phone"
-                            placeholder="* Phone">
+                            required placeholder="* Phone">
                     </div>
                 </div>
                 <div class="g-margin-b-80--xs">
                     <textarea class="form-control s-form-v3__input" rows="5" id="contact-project" name="project"
-                        placeholder="* Project Synopis"></textarea>
+                        required placeholder="* Project Synopis"></textarea>
                 </div>
                 <div class="g-text-center--xs">
                     <button type="submit"
@@ -700,6 +793,13 @@
     </footer>
     <!--========== END FOOTER ==========-->
 
+    <!-- Snackbar -->
+    <div id="snackbarSuccess"></div>
+    <div id="snackbarError"></div>
+
+
+    <!-- End of Snackbar -->
+
     <!-- Back To Top -->
     <a href="javascript:void(0);" class="s-back-to-top js__back-to-top"></a>
 
@@ -730,21 +830,36 @@
             event.preventDefault();
 
             let value = {
-                "Name": new FormData(contact).get('name'),
-                "Email": new FormData(contact).get('email'),
-                "Phone": new FormData(contact).get('phone'),
-                "Project Type": new FormData(contact).get('project')
+                Name: new FormData(contact).get('name'),
+                Email: new FormData(contact).get('email'),
+                Phone: new FormData(contact).get('phone'),
+                ProjectSynopsis: new FormData(contact).get('project')
             }
 
-            let response = await fetch('https://4zlqzklts5.execute-api.us-east-1.amazonaws.com/prod/', {
+            let response = await fetch('http://cors-anywhere.herokuapp.com/https://4zlqzklts5.execute-api.us-east-1.amazonaws.com/prod/', {
                 method: 'POST',
                 body: JSON.stringify(value)
             });
 
             let result = await response.json();
 
-            alert(result.message);
+            result.success ? snackbarSuccess(result.message) : snackbarError(result.errors[0].message);
+
         };
+
+        function snackbarSuccess(message) {
+            var x = document.getElementById("snackbarSuccess");
+            x.className = "show";
+            x.innerText = message
+            setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+        }
+
+        function snackbarError(message) {
+            var x = document.getElementById("snackbarError");
+            x.className = "show";
+            x.innerText = message
+            setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+        }
 
         function passValue() {
 
