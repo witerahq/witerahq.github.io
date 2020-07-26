@@ -593,15 +593,16 @@
     <script type="text/javascript" src="js/components/wow.min.js"></script>
     <!--========== END JAVASCRIPTS ==========-->
 
+    <!-- ========= CONTACT SCRIPT ========== -->
     <script>
         contact.onsubmit = async (event) => {
             event.preventDefault();
 
             let value = {
-                "Name": new FormData(contact).get('name'),
-                "Email": new FormData(contact).get('email'),
-                "Phone": new FormData(contact).get('phone'),
-                "Project Type": new FormData(contact).get('project')
+                Name: new FormData(contact).get('name'),
+                Email: new FormData(contact).get('email'),
+                Phone: new FormData(contact).get('phone'),
+                ProjectSynopsis: new FormData(contact).get('project')
             }
 
             let response = await fetch('https://4zlqzklts5.execute-api.us-east-1.amazonaws.com/prod/', {
@@ -611,8 +612,23 @@
 
             let result = await response.json();
 
-            alert(result.message);
+            result.success ? snackbarSuccess("We have recieved your proposal, and will get in touch with you shortly...") : snackbarError(result.errors[0].message);
+
         };
+
+        function snackbarSuccess(message) {
+            var x = document.getElementById("snackbarSuccess");
+            x.className = "show";
+            x.innerText = message
+            setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+        }
+
+        function snackbarError(message) {
+            var x = document.getElementById("snackbarError");
+            x.className = "show";
+            x.innerText = message
+            setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+        }
 
         function passValue() {
 
@@ -634,6 +650,7 @@
         }
 
     </script>
+    <!-- ======== END CONTACT SCRIPT ======= -->
 
     <!-- Google Tag Manager (noscript) -->
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-59KDFD6"
